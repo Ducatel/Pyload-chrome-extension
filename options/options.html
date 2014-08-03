@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title class="translatable" data-message="options_page_title">Pyload</title>
+		<link rel="icon" type="image/png" href="../img/favicon.png" />
+		<link rel="stylesheet" type="text/css" href="options.css">
+		<script type="text/javascript" src="../common.js"></script>
+		<script type="text/javascript" src="../translation.js"></script>
+		<script type="text/javascript" src="options.js"></script>
+	</head>
+
+	<body>
+		
+		<div id='centerContent'>
+			<form class="form-container">
+				<div class="form-title" class="translatable" data-message="options_form_title">
+					<h2>Pyload option</h2>
+				</div>
+				<div class="form-title translatable" data-message="options_label_address">
+					Address
+				</div>
+				<input class="form-field" type="text" name="address" id='address'/><br />
+				<div class="form-title translatable" data-message="options_label_port" >
+					Port
+				</div>
+				<input class="form-field" type="text" name="port" id='port'/><br />
+				<div class="form-title translatable" data-message="options_label_login">
+					Login
+				</div>
+				<input class="form-field" type="text" name="login" id='login'/><br />
+				<div class="form-title translatable" data-message="options_label_password" >
+					password
+				</div>
+				<input class="form-field" type="password" name="password" id='password'/><br />
+
+				<div class="submit-container">
+					<input class="button submit-button translatable" data-message="options_button_save" type="button" value="Save" id='save' />
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

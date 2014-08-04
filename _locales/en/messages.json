@@ -1,3 +1,42 @@
 {
-	
+	"options_page_title" : {
+		"message" : "Pyload for chrome",
+		"description" : "The title of options page"
+	},
+	"options_form_title" : {
+		"message" : "Pyload options",
+		"description" : "The title of form in options page"
+	},
+	"options_label_address" : {
+		"message" : "Address",
+		"description" : "Label for address field in options page"
+	},
+	"options_label_port" : {
+		"message" : "Port number",
+		"description" : "Label for port field in options page"
+	},
+	"options_label_login" : {
+		"message" : "Login",
+		"description" : "Label for login field in options page"
+	},
+	"options_label_password" : {
+		"message" : "Password",
+		"description" : "Label for password field in options page"
+	},
+	"options_button_save" : {
+		"message" : "Save",
+		"description" : "Save button in options page"
+	},
+	"options_save_complete" : {
+		"message" : "Settings are valid and saved",
+		"description" : "Display when login and password are saved/Validate"
+	},
+	"options_bad_login" : {
+		"message" : "Login and/or password are invalid",
+		"description" : "Display if login and/or password are invalid"
+	},
+	"options_pyload_not_found" : {
+		"message" : "Impossible to connect to Pyload server. Address or/and port number are invalid",
+		"description" : "Display if address and/or port are invalid "
+	}
 }

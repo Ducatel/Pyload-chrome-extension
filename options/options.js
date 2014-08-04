@@ -1,27 +1,10 @@
 
 /**
- * Display an notification for display the error
- * @param   jsonResponse json API response
+ * Check if the data connexion are valid and
+ * if is valid, save the login/password/adress/port
+ * @param  datasConnexion   Contains the data connection
  */
-function printAPIError(jsonResponse){
-
-	var msg = chrome.i18n.getMessage('options_login_fail') + "\n";
-	if(jsonResponse != undefined){
-		if(jsonResponse["response_code"].trim() == "BANNED_ACCOUNT")
-			msg += " - " + jsonResponse["banned_reason"];
-		else if (jsonResponse["response_code"].trim() == "UNKNOWN_USER")
-			msg += " - " + jsonResponse["response_text"];
-	}
-	displayNotification(msg, true);
-}
-
-/**
- * Check if the credential are valid and
- * if is valid, save the login/password/token
- * @param  login   The login
- * @param  password The password
- */
-function saveCredential(login, password){
+function saveDatasConnexion(datasConnexion){
 
 	var xhr = new XMLHttpRequest();
 	try {
@@ -30,40 +13,50 @@ function saveCredential(login, password){
 
 			if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
 
-				var jsonResponse = JSON.parse(xhr.responseText);
-				console.log("[DEBUG] saveCredential:");
-				console.log(jsonResponse);
+				if( xhr.responseText.trim() != "false" ){
 
-				if( jsonResponse["response_code"].trim() == "ok" ){
-
-					chrome.storage.sync.set({'login': login, 'password' : password, 'token': jsonResponse["token"] }, function() {
+					chrome.storage.sync.set(datasConnexion, function() {
 						displayNotification(chrome.i18n.getMessage('options_save_complete'));
 					});
 				}
 				else
-					printAPIError(jsonResponse);
+					displayNotification(chrome.i18n.getMessage('options_bad_login'), true);
 			}
 		}
 
 		xhr.onerror = function(error) {	console.error(error);}
 
-		var url = "http://www.mega-debrid.eu/api.php?action=connectUser";
-		url += "&login=" + encodeURIComponent(login);
-		url += "&password=" + encodeURIComponent(password);
-
-		xhr.open("GET", url, false);
-		xhr.send(null);
+		var url = datasConnexion['address'] + ":" + datasConnexion['port'] + "/api/login";
 		
-	} catch(e) { console.error(e); }
+		xhr.open("POST", url, false);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send("username=" + encodeURIComponent(datasConnexion['login']) + "&" +"password=" + encodeURIComponent(datasConnexion['password']));
+
+		
+	} catch(e) { 	
+		if(e['code'] == 19)
+			displayNotification(chrome.i18n.getMessage('options_pyload_not_found'),true );
+		else
+			console.error(e);
+	 }
 }
 
 /**
  * Save options to chrome storage
  */
 function save_options() {
-	var login = document.getElementById('login').value;
+	var address = document.getElementById('address').value.trim();
+	var port = document.getElementById('port').value.trim();
+	var login = document.getElementById('login').value.trim();
 	var password = document.getElementById('password').value;
-	saveCredential(login, password);
+
+	// delete the last / if present
+	// add http://
+	address = address.replace(/^\/|\/$/g, '');
+	if(address.substr(0,7) != 'http://')
+		address = 'http://' + address;
+
+	saveDatasConnexion({'address': address, 'port': port, 'login': login, 'password':password});
 }
 
 /**
@@ -72,10 +65,14 @@ function save_options() {
 function restore_options() {
 	chrome.storage.sync.get(
 	{
+		address: 'address',
+		port: 'port',
 		login: 'login',
 		password: 'password'
 	}, 
 	function(items) {
+		document.getElementById('address').value = items.address;
+		document.getElementById('port').value= items.port;
 		document.getElementById('login').value = items.login;
 		document.getElementById('password').value= items.password;
 	});
@@ -97,7 +94,5 @@ window.addEventListener("load", function() {
 
 	restore_options();
 	document.getElementById('save').addEventListener('click', save_options);
-
-	document.getElementById('login').onkeyup = launchSave_options;
 	document.getElementById('password').onkeyup = launchSave_options;
 });

@@ -17,6 +17,5 @@ function displayNotification(msg, isError){
 		opt['iconUrl'] = chrome.extension.getURL("img/icon128.png");
 		opt['eventTime'] = Date.now() + 3000;
 	}
-
 	chrome.notifications.create("", opt,function(notificationId) { });
 }
